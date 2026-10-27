@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ride Confirmed &bull; Uber Streaming Pipeline</title>
+    <style>
+        :root {
+            --uber-black: #000000;
+            --uber-white: #ffffff;
+            --uber-gray: #f6f6f6;
+            --uber-text: #2c2c2c;
+            --uber-green: #06c167;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--uber-gray);
+            color: var(--uber-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background-color: var(--uber-black);
+            color: var(--uber-white);
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            color: var(--uber-white);
+        }
+        .main-container {
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+        .card {
+            background: var(--uber-white);
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+        .status-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .status-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: var(--uber-green);
+        }
+        h1 {
+            font-size: 24px;
+            color: var(--uber-black);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .grid-item {
+            background: var(--uber-gray);
+            padding: 14px;
+            border-radius: 8px;
+        }
+        .grid-item.full {
+            grid-column: 1 / -1;
+        }
+        .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #777;
+            margin-bottom: 4px;
+        }
+        .value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            word-break: break-word;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--uber-white);
+            background-color: var(--uber-black);
+            border-radius: 8px;
+            text-decoration: none;
+        }
+        .button:hover {
+            background-color: #333333;
+        }
+        .event-status {
+            margin-top: 16px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .status-success {
+            background: #e6f9f0;
+            color: #0d6832;
+        }
+        .status-warning {
+            background: #fff8e6;
+            color: #8a6100;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">Uber Data Engineering</a>
+    </header>
+
+    <div class="main-container">
+        <div class="card">
+            <div class="status-header">
+                <div class="status-dot"></div>
+                <h1>Ride Confirmed &amp; Streamed</h1>
+            </div>
+
+            {% if event_sent %}
+            <div class="event-status status-success">
+                &check; Event successfully published to Azure Event Hub topic
+            </div>
+            {% else %}
+            <div class="event-status status-warning">
+                &excl; Simulation mode: Event generated locally (configure CONNECTION_STRING in .env to stream to Azure Event Hub)
+            </div>
+            {% endif %}
+
+            {% if ride %}
+            <div class="grid">
+                <div class="grid-item">
+                    <div class="label">Confirmation Number</div>
+                    <div class="value">{{ ride.confirmation_number }}</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Total Fare</div>
+                    <div class="value">${{ "%.2f"|format(ride.total_fare) }} (Surge: {{ ride.surge_multiplier }}x)</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Passenger</div>
+                    <div class="value">{{ ride.passenger_name }}</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Driver &amp; Rating</div>
+                    <div class="value">{{ ride.driver_name }} (&#9733; {{ ride.driver_rating }})</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Vehicle</div>
+                    <div class="value">{{ ride.vehicle_color }} {{ ride.vehicle_model }} &bull; {{ ride.license_plate }}</div>
+                </div>
+                <div class="grid-item">
+                    <div class="label">Distance &amp; Duration</div>
+                    <div class="value">{{ ride.distance_miles }} mi &bull; {{ ride.duration_minutes }} mins</div>
+                </div>
+                <div class="grid-item full">
+                    <div class="label">Pickup Location</div>
+                    <div class="value">{{ ride.pickup_address }}</div>
+                </div>
+                <div class="grid-item full">
+                    <div class="label">Dropoff Location</div>
+                    <div class="value">{{ ride.dropoff_address }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <a href="/" class="button">&larr; Book Another Ride</a>
+        </div>
+    </div>
+</body>
+</html>

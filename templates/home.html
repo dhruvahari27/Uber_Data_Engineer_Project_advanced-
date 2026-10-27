@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Real-Time Ride Booking Producer</title>
+    <style>
+        :root {
+            --uber-black: #000000;
+            --uber-white: #ffffff;
+            --uber-gray: #f6f6f6;
+            --uber-text: #2c2c2c;
+            --uber-green: #276ef1;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--uber-gray);
+            color: var(--uber-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background-color: var(--uber-black);
+            color: var(--uber-white);
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        .main-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+        .hero-card {
+            background: var(--uber-white);
+            padding: 36px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: var(--uber-black);
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 24px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--uber-white);
+            background-color: var(--uber-black);
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .button:hover {
+            background-color: #333333;
+            transform: translateY(-1px);
+        }
+        .button-secondary {
+            background-color: var(--uber-green);
+        }
+        .button-secondary:hover {
+            background-color: #1b51b8;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .info-box {
+            background: var(--uber-gray);
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid var(--uber-black);
+        }
+        .info-box h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            color: #444;
+        }
+        .info-box p {
+            font-size: 14px;
+            margin-bottom: 0;
+            color: #666;
+        }
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: #888;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Uber Data Engineering</div>
+        <div class="badge">Real-Time Event Streamer</div>
+    </header>
+
+    <div class="main-container">
+        <div class="hero-card">
+            <h1>Real-Time Ride Booking Generator</h1>
+            <p>
+                This service simulates realistic Uber ride transactions generated using Faker and streams them live into <strong>Azure Event Hubs</strong> (Kafka protocol). From there, the events are ingested into <strong>Azure Databricks Delta Live Tables</strong> following the Medallion Architecture (Bronze &rarr; Silver OBT &rarr; Gold Star Schema).
+            </p>
+
+            <div class="btn-group">
+                <a href="/book" class="button">Book a Single Ride</a>
+                <a href="/api/rides/simulate?count=10" class="button button-secondary">Simulate Batch (10 Rides)</a>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box">
+                    <h3>Producer</h3>
+                    <p>FastAPI event generator streaming real-time JSON payloads.</p>
+                </div>
+                <div class="info-box">
+                    <h3>Ingestion</h3>
+                    <p>Azure Event Hubs (Kafka SASL_SSL) &amp; ADLS Gen2.</p>
+                </div>
+                <div class="info-box">
+                    <h3>Lakehouse</h3>
+                    <p>Databricks Delta Live Tables with Medallion &amp; SCD modeling.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Uber Lakehouse Data Engineering Project &bull; Built with FastAPI &amp; Azure Databricks
+    </footer>
+</body>
+</html>
